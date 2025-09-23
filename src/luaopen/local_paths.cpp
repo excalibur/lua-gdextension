@@ -44,7 +44,7 @@ static int l_searchpath(lua_State *L) {
 	for (const String& path_template : path_list) {
 		String filename = path_template.replace(LUA_PATH_MARK, name);
 		if (FileAccess::file_exists(filename)) {
-			sol::stack::push(L, filename.utf8().data());
+			sol::stack::push(L, filename.utf8().get_data());
 			return 1;
 		}
 		else {
@@ -58,7 +58,7 @@ static int l_searchpath(lua_State *L) {
 		error_message += String("\n\tno file \"%s\"") % filename;
 	}
 	sol::stack::push(L, sol::nil);
-	sol::stack::push(L, error_message.utf8().data());
+	sol::stack::push(L, error_message.utf8().get_data());
 	return 2;
 }
 
