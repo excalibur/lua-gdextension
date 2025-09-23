@@ -57,7 +57,7 @@ static int l_searchpath(lua_State *L) {
 	for (const String& filename : not_found_list) {
 		error_message += String("\n\tno file \"%s\"") % filename;
 	}
-	print_line("加载错误: ", error_message);
+	print_line("load error: ", error_message);
 	sol::stack::push(L, sol::nil);
 	sol::stack::push(L, error_message.utf8().get_data());
 	return 2;
@@ -72,19 +72,16 @@ static int l_loadfile(lua_State *L) {
 	sol::load_result result = load_fileaccess(state, filename, mode, Object::cast_to<LuaTable>(env));
 	if (result.valid()) {
 		result = sol::load_result();  // avoid popping result
-		if (result.valid()) {
-			return 1;
-		} 
-		sol::error err = result;
-        print_line("script error: ", String::utf8(err.what()));
-        std::string error_message = err.what();
-        lua_pushstring(L, error_message.c_str());
 		return 1;
 	}
 	else {
 		lua_pushnil(L);
 		lua_rotate(L, result.stack_index(), 1);
 		result = sol::load_result();  // avoid popping error
+		sol::error err = result;
+        print_line("script error: ", String::utf8(err.what()));
+        std::string error_message = err.what();
+        lua_pushstring(L, error_message.c_str());
 		return 2;
 	}
 }
