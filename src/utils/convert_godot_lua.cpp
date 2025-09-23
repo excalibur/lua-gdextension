@@ -55,7 +55,7 @@ Variant to_variant(const sol::basic_object<ref_t>& object) {
 			return object.template as<bool>();
 
 		case sol::type::string:
-			return object.template as<String>();
+			return String::utf8(object.template as<const char *>());
 
 		case sol::type::number:
 			if (sol::utility::is_integer(object)) {
