@@ -71,11 +71,11 @@ void LuaError::set_status(Status status) {
 }
 
 String LuaError::extract_message(const sol::load_result& load_result) {
-	return luaL_tolstring(load_result.lua_state(), load_result.stack_index(), NULL);
+	return String::utf8(luaL_tolstring(load_result.lua_state(), load_result.stack_index(), NULL));
 }
 
 String LuaError::extract_message(const sol::protected_function_result& function_result) {
-	return luaL_tolstring(function_result.lua_state(), function_result.stack_index() + function_result.return_count() - 1, NULL);
+	return String::utf8(luaL_tolstring(function_result.lua_state(), function_result.stack_index() + function_result.return_count() - 1, NULL));
 }
 
 }
