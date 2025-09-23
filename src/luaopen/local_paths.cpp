@@ -57,6 +57,7 @@ static int l_searchpath(lua_State *L) {
 	for (const String& filename : not_found_list) {
 		error_message += String("\n\tno file \"%s\"") % filename;
 	}
+	print_line("1: ", error_message);
 	sol::stack::push(L, sol::nil);
 	sol::stack::push(L, error_message.utf8().get_data());
 	return 2;
@@ -70,10 +71,12 @@ static int l_loadfile(lua_State *L) {
 
 	sol::load_result result = load_fileaccess(state, filename, mode, Object::cast_to<LuaTable>(env));
 	if (result.valid()) {
+		print_line("5: ");
 		result = sol::load_result();  // avoid popping result
 		return 1;
 	}
 	else {
+		print_line("4: ");
 		lua_pushnil(L);
 		lua_rotate(L, result.stack_index(), 1);
 		result = sol::load_result();  // avoid popping error
@@ -87,11 +90,13 @@ static int l_dofile(lua_State *L) {
 	int previous_top = lua_gettop(L);
 	sol::load_result result = load_fileaccess(state, filename);
 	if (result.valid()) {
+		print_line("3: ");
 		result = sol::load_result();  // avoid over-popping function
 		lua_call(L, 0, LUA_MULTRET);
 		return lua_gettop(L) - previous_top;
 	}
 	else {
+		print_line("2: ");
 		result = sol::load_result();  // avoid popping error
 		sol::error err = result;
         print_line("script error: ", String::utf8(err.what()));
