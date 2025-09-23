@@ -133,7 +133,9 @@ Variant to_variant(const sol::protected_function_result& function_result, bool r
 			return memnew(LuaError(function_result));
 		}
 		else {
-			ERR_PRINT(LuaError::extract_message(function_result));
+			ERR_PRINT(String::utf8(LuaError::extract_message(function_result)));
+			ERR_PRINT("aaaa");
+			ERR_PRINT("测试");
 			return Variant();
 		}
 	}
