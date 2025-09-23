@@ -44,7 +44,7 @@ static int l_searchpath(lua_State *L) {
 	for (const String& path_template : path_list) {
 		String filename = path_template.replace(LUA_PATH_MARK, name);
 		if (FileAccess::file_exists(filename)) {
-			sol::stack::push(L, filename);
+			sol::stack::push(L, filename.utf8().data());
 			return 1;
 		}
 		else {
@@ -58,7 +58,7 @@ static int l_searchpath(lua_State *L) {
 		error_message += String("\n\tno file \"%s\"") % filename;
 	}
 	sol::stack::push(L, sol::nil);
-	sol::stack::push(L, error_message);
+	sol::stack::push(L, error_message.utf8().data());
 	return 2;
 }
 
@@ -93,6 +93,10 @@ static int l_dofile(lua_State *L) {
 	}
 	else {
 		result = sol::load_result();  // avoid popping error
+		sol::error err = result;
+        print_line("script error: ", String::utf8(err.what()));
+        std::string error_message = err.what();
+        lua_pushstring(L, error_message.c_str());
 		return lua_error(L);
 	}
 }
