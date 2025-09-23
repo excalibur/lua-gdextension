@@ -64,7 +64,7 @@ static int l_searchpath(lua_State *L) {
 
 static int l_loadfile(lua_State *L) {
 	sol::state_view state(L);
-	String filename = luaL_optstring(L, 1, "");
+	String filename = String::utf8(luaL_optstring(L, 1, ""));
 	String mode = luaL_optstring(L, 2, "bt");
 	Variant env = to_variant(sol::stack_object(L, 3));
 
@@ -83,8 +83,7 @@ static int l_loadfile(lua_State *L) {
 
 static int l_dofile(lua_State *L) {
 	sol::state_view state(L);
-	String filename = luaL_optstring(L, 1, "");
-	
+	String filename = String::utf8(luaL_optstring(L, 1, ""));
 	int previous_top = lua_gettop(L);
 	sol::load_result result = load_fileaccess(state, filename);
 	if (result.valid()) {
