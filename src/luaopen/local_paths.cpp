@@ -31,8 +31,8 @@
 using namespace luagdextension;
 
 static int l_searchpath(lua_State *L) {
-	String name = luaL_checkstring(L, 1);
-	String path = luaL_checkstring(L, 2);
+	String name = String::utf8(luaL_checkstring(L, 1));
+	String path = String::utf8(luaL_checkstring(L, 2));
 	String sep = luaL_optstring(L, 3, ".");
 	String rep = luaL_optstring(L, 4, "/");
 	if (!sep.is_empty()) {
