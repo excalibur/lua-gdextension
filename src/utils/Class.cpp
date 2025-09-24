@@ -73,7 +73,8 @@ bool Class::operator==(const Class& other) const {
 
 static sol::object __index(sol::this_state state, const Class& cls, sol::stack_object key) {
 	if (key.get_type() == sol::type::string) {
-		StringName name = key.as<StringName>();
+		std::string utf8_key = key.as<std::string>();
+		StringName name = String::utf8(utf8_key.c_str());
 		if (auto constant = cls.get_constant(name)) {
 			return sol::make_object(state, *constant);
 		}
